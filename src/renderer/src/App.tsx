@@ -92,7 +92,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export default function App(): React.JSX.Element {
   const [folio,          setFolio         ] = useState('')
-  const [fecha,          setFecha         ] = useState(new Date().toISOString().split('T')[0])
+  const [fecha] = useState(new Date().toISOString().split('T')[0])
   const [cantidad,       setCantidad      ] = useState('1')
   const [pagoTarjeta,    setPagoTarjeta   ] = useState(false)
   const [formatoCredito, setFormatoCredito] = useState(false)
