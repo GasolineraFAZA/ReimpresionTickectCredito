@@ -95,12 +95,7 @@ async function getSgDbConfig(direccionIP: string, database: string): Promise<DbC
 
   const norm = (s: string) => s.toLowerCase().replace(/[\s_-]/g, '')
 
-  // ── Paso 1: encontrar el nombre de la BD "SG" ──────────────────────────────
-  // El registro con nombre="SG" nos confirma que existe esa base de datos.
-  const sgRecord = bases.find((b) => norm(b.nombre) === 'sg')
-  const dbName   = sgRecord?.nombre ?? 'SG'
-
-  // ── Paso 2: encontrar la cadena de conexión ────────────────────────────────
+  // ── Encontrar la cadena de conexión ───────────────────────────────────────
   // La cadena puede estar en referencia3 de cualquier registro.
   // Estrategia: buscar primero en el registro SG, luego en el resto.
   // La cadena apunta al mismo servidor que la IP de la sucursal (direccionIP).

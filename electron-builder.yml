@@ -13,6 +13,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: reimpresion-tickets
+  forceCodeSigning: false
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
