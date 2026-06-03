@@ -93,8 +93,6 @@ async function getSgDbConfig(direccionIP: string, database: string): Promise<DbC
     bases.map(b => ({ nombre: b.nombre, id: b.id, ref3: b.referencia3?.substring(0, 30) ?? '' }))
   )}`)
 
-  const norm = (s: string) => s.toLowerCase().replace(/[\s_-]/g, '')
-
   // ── Encontrar la cadena de conexión ───────────────────────────────────────
   // La cadena puede estar en referencia3 de cualquier registro.
   // Estrategia: buscar primero en el registro SG, luego en el resto.

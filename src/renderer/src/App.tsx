@@ -254,10 +254,8 @@ export default function App(): React.JSX.Element {
 
           <div className="p-4 space-y-2.5">
 
-            {/* ── Fecha + Logo ──────────────────────────────────────── */}
-            <div className="flex items-center justify-between">
-              <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)}
-                className="border border-gray-300 rounded px-3 py-1.5 text-sm bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-orange-400" />
+            {/* ── Logo ──────────────────────────────────────────────── */}
+            <div className="flex justify-end">
               <div className="w-14 h-14 border-2 border-dashed border-orange-400 rounded-lg flex items-center justify-center">
                 <span className="text-orange-500 font-bold text-xl">P+</span>
               </div>
