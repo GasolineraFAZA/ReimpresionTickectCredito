@@ -2,6 +2,39 @@ import React, { useState, useEffect, useRef } from 'react'
 import type { SucursalModel, DespachoPreview } from '../../preload/index.d'
 import { TicketPreview } from './components/TicketPreview'
 
+// ─── Iconos (SVG inline) ───────────────────────────────────────────────────────
+
+const IconLock = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+)
+const IconCheck = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+  </svg>
+)
+const IconEye = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
+  </svg>
+)
+const IconPrinter = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <polyline points="6 9 6 2 18 2 18 9" />
+    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+    <rect x="6" y="14" width="12" height="8" />
+  </svg>
+)
+const IconInfo = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
+  </svg>
+)
+
+const drag    = { WebkitAppRegion: 'drag' }    as React.CSSProperties
+const noDrag  = { WebkitAppRegion: 'no-drag' } as React.CSSProperties
+
 // ─── Modal de Autorización ────────────────────────────────────────────────────
 
 function ModalAuth({
@@ -30,60 +63,48 @@ function ModalAuth({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-2xl w-80">
-        <div className="bg-orange-500 text-white px-4 py-2.5 rounded-t-lg flex items-center justify-between">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-2xl w-80 overflow-hidden">
+        <div className="bg-orange-700 text-white px-5 py-3 flex items-center justify-between">
           <span className="font-semibold text-sm">Autorización requerida</span>
           <button onClick={onCancelar}
-            className="w-5 h-5 bg-red-400 hover:bg-red-300 rounded text-xs leading-none">✕</button>
+            className="w-6 h-6 hover:bg-orange-600 rounded text-sm leading-none">✕</button>
         </div>
         <div className="p-5 space-y-3">
-          <p className="text-xs text-gray-700 bg-yellow-50 border border-yellow-300 rounded p-3">
+          <p className="text-xs text-gray-600 bg-amber-50 border border-amber-200 rounded-lg p-3">
             El folio <strong>{folio}</strong> ya fue impreso{' '}
             <strong>{numImpresiones}</strong> {numImpresiones === 1 ? 'vez' : 'veces'}.
             Se requiere autorización para reimprimir.
           </p>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Usuario</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Usuario</label>
             <input ref={inputRef} type="text" value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAceptar()}
-              className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-400" />
+              className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Contraseña</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Contraseña</label>
             <input type="password" value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAceptar()}
-              className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-400" />
+              className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
           </div>
           {errorMsg && (
-            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded p-2">{errorMsg}</p>
+            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg p-2">{errorMsg}</p>
           )}
         </div>
-        <div className="px-5 pb-4 flex justify-end gap-2">
+        <div className="px-5 pb-5 flex justify-end gap-2">
           <button onClick={onCancelar}
-            className="px-4 py-1.5 text-sm border border-gray-300 bg-gray-50 hover:bg-gray-100 rounded">
+            className="px-4 py-2 text-sm border border-gray-200 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700">
             Cancelar
           </button>
           <button onClick={handleAceptar}
-            className="px-4 py-1.5 text-sm bg-orange-500 hover:bg-orange-600 text-white rounded font-semibold">
+            className="px-4 py-2 text-sm bg-orange-700 hover:bg-orange-800 text-white rounded-lg font-semibold">
             Aceptar
           </button>
         </div>
       </div>
-    </div>
-  )
-}
-
-// ─── Fila de formulario ───────────────────────────────────────────────────────
-// Definido FUERA de App para que React no lo desmonte en cada re-render.
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="w-40 text-right text-sm font-semibold text-gray-600 shrink-0">{label}</span>
-      <div className="flex-1 flex items-center gap-3">{children}</div>
     </div>
   )
 }
@@ -95,11 +116,13 @@ export default function App(): React.JSX.Element {
   const [fecha] = useState(new Date().toISOString().split('T')[0])
   const [cantidad,       setCantidad      ] = useState('1')
   const [pagoTarjeta,    setPagoTarjeta   ] = useState(false)
-  const [formatoCredito, setFormatoCredito] = useState(false)
+  const [formatoCredito, setFormatoCredito] = useState(true)
   const [impresora,      setImpresora     ] = useState('')
+  const [impresoras,     setImpresoras    ] = useState<{ name: string; isDefault: boolean }[]>([])
 
   const [sucursal,   setSucursal  ] = useState<SucursalModel | null>(null)
   const [loadingSuc, setLoadingSuc] = useState(true)
+  const [version,    setVersion   ] = useState('')
 
   const [error,   setError  ] = useState('')
   const [mensaje, setMensaje] = useState('')
@@ -118,6 +141,12 @@ export default function App(): React.JSX.Element {
   } | null>(null)
 
   useEffect(() => {
+    window.electron.getVersion().then(setVersion)
+    window.electron.getPrinters().then((lista) => {
+      setImpresoras(lista)
+      const def = lista.find((p) => p.isDefault)
+      if (def) setImpresora(def.name)
+    })
     window.electron.getSucursal()
       .then(({ sucursales }) => {
         setSucursal(sucursales[0] ?? null)
@@ -141,7 +170,7 @@ export default function App(): React.JSX.Element {
   const buildOpciones = () => ({
     idControlGas: sucursal!.idControlGas,
     direccionIP:  sucursal!.direccionIP,
-    database:     sucursal!.referencia4,   // nombre de la BD local (ej. "P08165")
+    database:     sucursal!.referencia4,
     folio:        Number(folio),
     fecha,
     pagoTarjeta,
@@ -150,12 +179,10 @@ export default function App(): React.JSX.Element {
 
   const verificarYContinuar = async (onAuthorized: (usuario: string) => Promise<void>) => {
     const lista = await window.electron.verificarReimpresion(Number(folio), sucursal!.idControlGas)
-
     if (lista.length === 0 || lista[0].NUM_IMPRESIONES <= 1) {
       await onAuthorized('supervisor')
       return
     }
-
     setAuthState({
       visible:        true,
       numImpresiones: lista[0].NUM_IMPRESIONES,
@@ -169,9 +196,7 @@ export default function App(): React.JSX.Element {
   const fetchTicketData = () => window.electron.vistaPrevia(buildOpciones())
 
   const registrarReimpresion = (gasolinera: string, usuario: string) =>
-    window.electron.insertarReimpresion(
-      Number(folio), sucursal!.idControlGas, gasolinera, usuario
-    )
+    window.electron.insertarReimpresion(Number(folio), sucursal!.idControlGas, gasolinera, usuario)
 
   const handleVistaPrevia = async () => {
     const errMsg = validar()
@@ -205,7 +230,6 @@ export default function App(): React.JSX.Element {
         const resultado = await fetchTicketData()
         if (!resultado.ok) { setError(resultado.mensaje); return }
         await registrarReimpresion(resultado.despacho.gasolinera, usuario)
-        setMensaje('')
         setMensaje('Funcionalidad de impresión en desarrollo')
       })
     } catch (e: any) {
@@ -234,108 +258,157 @@ export default function App(): React.JSX.Element {
     setLoadingPrint(false)
   }
 
+  // ── Stepper de copias ────────────────────────────────────────────────────────
+  const cant    = Number(cantidad) || 1
+  const decCant = () => setCantidad(String(Math.max(1, cant - 1)))
+  const incCant = () => setCantidad(String(Math.min(5, cant + 1)))
+
+  const enLinea = !loadingSuc && !!sucursal
+  const cargando = loadingPreview || loadingPrint
+
+  // ── Render ──────────────────────────────────────────────────────────────────
   return (
-    <div className="bg-gray-200 min-h-screen">
-      <div className="flex justify-center pt-0">
-        <div className="bg-gray-100 w-full shadow-xl border border-gray-300">
+    <div className="h-full flex flex-col bg-white select-none">
 
-          {/* ── Barra de título ─────────────────────────────────────── */}
-          <div className="bg-orange-500 text-white text-sm font-semibold px-4 py-2 rounded-t-lg flex items-center justify-between select-none">
-            <span>Impresión de Tickets de Crédito</span>
-            <div className="flex gap-1.5">
-              <button onClick={() => window.electron.minimize()} title="Minimizar"
-                className="w-4 h-4 bg-orange-300 hover:bg-orange-200 rounded-sm text-xs leading-none">─</button>
-              <button title="Maximizar"
-                className="w-4 h-4 bg-orange-300 rounded-sm text-xs leading-none opacity-40 cursor-default">□</button>
-              <button onClick={() => window.electron.close()} title="Cerrar"
-                className="w-4 h-4 bg-red-400 hover:bg-red-300 rounded-sm text-xs leading-none">✕</button>
-            </div>
+      {/* ── Header ──────────────────────────────────────────────────────────── */}
+      <div style={drag} className="relative shrink-0 bg-orange-100 px-7 pt-7 pb-5 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-orange-800 leading-tight">Módulo de Impresión</h1>
+          <p className="text-sm text-orange-400 mt-0.5">Gestión de tickets de crédito corporativos</p>
+        </div>
+
+        {/* Mini mockup decorativo */}
+        <div className="w-24 h-16 bg-white rounded-lg shadow-md border border-orange-200 overflow-hidden mt-1">
+          <div className="h-3 bg-orange-500" />
+          <div className="p-1.5 space-y-1">
+            <div className="h-1 bg-gray-200 rounded w-3/4" />
+            <div className="h-1 bg-gray-200 rounded w-1/2" />
+            <div className="h-2 bg-orange-400 rounded w-2/3 mt-1.5" />
           </div>
+        </div>
 
-          <div className="p-4 space-y-2.5">
-
-            {/* ── Logo ──────────────────────────────────────────────── */}
-            <div className="flex justify-end">
-              <div className="w-14 h-14 border-2 border-dashed border-orange-400 rounded-lg flex items-center justify-center">
-                <span className="text-orange-500 font-bold text-xl">P+</span>
-              </div>
-            </div>
-
-            {/* ── Sucursal ──────────────────────────────────────────── */}
-            <Field label="SUCURSAL:">
-              <input type="text" readOnly
-                value={loadingSuc ? 'Detectando...' : (sucursal?.nombre ?? 'No encontrada')}
-                className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm bg-gray-50 text-gray-600" />
-            </Field>
-
-            {/* ── Folio ─────────────────────────────────────────────── */}
-            <Field label="FOLIO:">
-              <input type="number" value={folio} onChange={(e) => setFolio(e.target.value)}
-                className="w-36 border border-gray-300 rounded px-3 py-1.5 text-sm bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-orange-400" />
-              <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer whitespace-nowrap">
-                <input type="checkbox" checked={pagoTarjeta} onChange={(e) => setPagoTarjeta(e.target.checked)}
-                  className="accent-orange-500" />
-                Pago con tarjeta
-              </label>
-            </Field>
-
-            {/* ── Copias ────────────────────────────────────────────── */}
-            <Field label="COPIAS A IMPRIMIR:">
-              <input type="number" value={cantidad} min="1" max="5"
-                onChange={(e) => setCantidad(e.target.value)}
-                className="w-36 border border-gray-300 rounded px-3 py-1.5 text-sm bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-orange-400" />
-              <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer whitespace-nowrap">
-                <input type="checkbox" checked={formatoCredito} onChange={(e) => setFormatoCredito(e.target.checked)}
-                  className="accent-orange-500" />
-                Formato de Crédito
-              </label>
-            </Field>
-
-            {/* ── Impresoras ────────────────────────────────────────── */}
-            <Field label="LISTA DE IMPRESORAS:">
-              <select value={impresora} onChange={(e) => setImpresora(e.target.value)}
-                className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-orange-400">
-                <option value="">Seleccionar impresora...</option>
-              </select>
-            </Field>
-
-            {/* ── Mensajes ──────────────────────────────────────────── */}
-            {error && (
-              <div className="px-3 py-2 bg-red-50 border border-red-200 rounded text-red-700 text-xs leading-relaxed">
-                {error}
-              </div>
-            )}
-            {!error && mensaje && (
-              <div className="px-3 py-2 bg-blue-50 border border-blue-200 rounded text-blue-700 text-xs">
-                {mensaje}
-              </div>
-            )}
-
-            {/* ── Botones ───────────────────────────────────────────── */}
-            <div className="flex gap-2 pt-1">
-              <button
-                className="flex-1 border border-gray-300 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold py-2 rounded transition-colors">
-                VERIFICAR IMPRESORA
-              </button>
-              <button onClick={handleImprimir} disabled={loadingPrint || loadingPreview}
-                className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white text-xs font-semibold py-2 rounded transition-colors">
-                {loadingPrint ? 'PROCESANDO...' : 'IMPRIMIR TICKET'}
-              </button>
-              <button onClick={handleVistaPrevia} disabled={loadingPreview || loadingPrint}
-                className="flex-1 border border-gray-300 bg-gray-200 hover:bg-gray-300 disabled:opacity-50 text-gray-700 text-xs font-semibold py-2 rounded transition-colors">
-                {loadingPreview ? 'CARGANDO...' : 'VISTA PREVIA'}
-              </button>
-            </div>
-
-            <div>
-              <a href="#" className="text-orange-500 hover:text-orange-600 text-xs underline">Ayuda?</a>
-            </div>
-
-          </div>
+        {/* Controles de ventana */}
+        <div style={noDrag} className="absolute top-2 right-3 flex gap-1.5">
+          <button onClick={() => window.electron.minimize()} title="Minimizar"
+            className="w-3.5 h-3.5 rounded-full bg-orange-300 hover:bg-orange-400" />
+          <button onClick={() => window.electron.close()} title="Cerrar"
+            className="w-3.5 h-3.5 rounded-full bg-red-400 hover:bg-red-500" />
         </div>
       </div>
 
-      {/* ── Modal Autorización ──────────────────────────────────────────── */}
+      {/* ── Cuerpo ──────────────────────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col px-7 py-5">
+
+        <div className="flex gap-5">
+
+          {/* Columna izquierda */}
+          <div className="flex-1 space-y-4">
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-500 mb-1">Sucursal</label>
+                <div className="relative">
+                  <input type="text" readOnly
+                    value={loadingSuc ? 'Detectando...' : (sucursal?.nombre ?? 'No encontrada')}
+                    className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 pr-8" />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"><IconLock /></span>
+                </div>
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-500 mb-1">Folio</label>
+                <input type="number" value={folio} onChange={(e) => setFolio(e.target.value)}
+                  placeholder="Ej. 12345"
+                  className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder:text-gray-400" />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-medium text-gray-500">Lista de impresoras</label>
+                <span className="flex items-center gap-1 text-xs font-medium">
+                  <span className={`w-1.5 h-1.5 rounded-full ${enLinea ? 'bg-green-500' : 'bg-gray-400'}`} />
+                  <span className={enLinea ? 'text-green-600' : 'text-gray-400'}>
+                    {enLinea ? 'En línea' : 'Sin conexión'}
+                  </span>
+                </span>
+              </div>
+              <select value={impresora} onChange={(e) => setImpresora(e.target.value)}
+                className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                <option value="">Seleccionar impresora...</option>
+                {impresoras.map((p) => (
+                  <option key={p.name} value={p.name}>
+                    {p.name}{p.isDefault ? ' (predeterminada)' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2 pt-1">
+              <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input type="checkbox" checked={pagoTarjeta} onChange={(e) => setPagoTarjeta(e.target.checked)}
+                  className="w-4 h-4 accent-orange-600" />
+                Pago con tarjeta
+              </label>
+              <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input type="checkbox" checked={formatoCredito} onChange={(e) => setFormatoCredito(e.target.checked)}
+                  className="w-4 h-4 accent-orange-600" />
+                Formato de Crédito
+              </label>
+            </div>
+          </div>
+
+          {/* Columna derecha — copias */}
+          <div className="w-52 bg-gray-100 rounded-xl p-4 flex flex-col">
+            <label className="block text-xs font-medium text-gray-500 mb-2">Copias a imprimir</label>
+            <div className="flex items-center gap-2">
+              <button onClick={decCant}
+                className="w-9 h-9 bg-white border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 text-lg leading-none">−</button>
+              <input type="number" value={cantidad} min="1" max="5"
+                onChange={(e) => setCantidad(e.target.value)}
+                className="flex-1 w-full text-center bg-white border border-gray-300 rounded-lg py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+              <button onClick={incCant}
+                className="w-9 h-9 bg-white border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 text-lg leading-none">+</button>
+            </div>
+            <p className="flex items-start gap-1.5 text-xs text-orange-700 mt-3 leading-snug">
+              <span className="mt-0.5 shrink-0"><IconInfo /></span>
+              Asegúrese de que el papel térmico esté correctamente alineado antes de iniciar la impresión masiva.
+            </p>
+          </div>
+        </div>
+
+        {/* Mensajes */}
+        {error && (
+          <div className="mt-3 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs">{error}</div>
+        )}
+        {!error && mensaje && (
+          <div className="mt-3 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 text-xs">{mensaje}</div>
+        )}
+
+        {/* Divider */}
+        <div className="border-t border-gray-200 my-4" />
+
+        {/* Botones */}
+        <div className="flex items-center gap-3">
+          <button
+            className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors">
+            <IconCheck /> Verificar Impresora
+          </button>
+          <button onClick={handleVistaPrevia} disabled={cargando}
+            className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 text-gray-700 text-sm font-medium rounded-lg transition-colors">
+            <IconEye /> {loadingPreview ? 'Cargando...' : 'Vista Previa'}
+          </button>
+          <button onClick={handleImprimir} disabled={cargando}
+            className="ml-auto flex items-center gap-2 px-7 py-2.5 bg-orange-700 hover:bg-orange-800 disabled:bg-orange-300 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
+            <IconPrinter /> {loadingPrint ? 'Procesando...' : 'Imprimir Ticket'}
+          </button>
+        </div>
+
+        {/* Versión */}
+        <div className="mt-auto pt-3 flex justify-end">
+          <span className="text-gray-300 text-xs">v{version}</span>
+        </div>
+      </div>
+
+      {/* ── Modal Autorización ──────────────────────────────────────────────── */}
       {authState.visible && (
         <ModalAuth
           numImpresiones={authState.numImpresiones}
@@ -345,27 +418,27 @@ export default function App(): React.JSX.Element {
         />
       )}
 
-      {/* ── Modal Vista Previa ──────────────────────────────────────────── */}
+      {/* ── Modal Vista Previa ──────────────────────────────────────────────── */}
       {preview && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => setPreview(null)}>
-          <div className="bg-white rounded-lg shadow-2xl flex flex-col max-h-[90vh] w-72"
+          <div className="bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] w-72 overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
-            <div className="bg-orange-500 text-white px-4 py-2 rounded-t-lg flex items-center justify-between shrink-0">
+            <div className="bg-orange-700 text-white px-4 py-3 flex items-center justify-between shrink-0">
               <span className="font-semibold text-sm">Vista Previa — Folio {preview.folio}</span>
               <button onClick={() => setPreview(null)}
-                className="w-5 h-5 bg-red-400 hover:bg-red-300 rounded text-xs leading-none">✕</button>
+                className="w-6 h-6 hover:bg-orange-600 rounded text-sm leading-none">✕</button>
             </div>
             <div className="overflow-y-auto flex-1 p-3 bg-gray-50">
               <TicketPreview folio={preview.folio} pagoTarjeta={preview.pagoTarjeta} d={preview.despacho} />
             </div>
             <div className="px-4 py-3 border-t flex justify-end gap-2 shrink-0">
               <button onClick={() => setPreview(null)}
-                className="px-4 py-1.5 text-sm border border-gray-300 bg-gray-50 hover:bg-gray-100 rounded">
+                className="px-4 py-2 text-sm border border-gray-200 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700">
                 Cerrar
               </button>
               <button onClick={() => window.print()}
-                className="px-4 py-1.5 text-sm bg-orange-500 hover:bg-orange-600 text-white rounded">
+                className="px-4 py-2 text-sm bg-orange-700 hover:bg-orange-800 text-white rounded-lg">
                 Imprimir
               </button>
             </div>

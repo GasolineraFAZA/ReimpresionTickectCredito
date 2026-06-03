@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from 'electron'
+import { ipcMain, BrowserWindow, app } from 'electron'
 import { networkInterfaces }      from 'os'
 import log                        from 'electron-log'
 
@@ -150,6 +150,12 @@ export function registerHandlers(): void {
   // ── Ventana ────────────────────────────────────────────────────────────────
   ipcMain.on('window:minimize', () => BrowserWindow.getFocusedWindow()?.minimize())
   ipcMain.on('window:close',    () => BrowserWindow.getFocusedWindow()?.close())
+  ipcMain.handle('app:version', () => app.getVersion())
+
+  ipcMain.handle('app:printers', () => {
+    const win = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0]
+    return win?.webContents.getPrintersAsync() ?? []
+  })
 
   // ── Sucursal (por IP de la máquina) ────────────────────────────────────────
   ipcMain.handle('sucursal:get', async () => {

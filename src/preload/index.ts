@@ -7,8 +7,10 @@ if (process.contextIsolated) {
 
     contextBridge.exposeInMainWorld('electron', {
       // Ventana
-      minimize: () => ipcRenderer.send('window:minimize'),
-      close:    () => ipcRenderer.send('window:close'),
+      minimize:   () => ipcRenderer.send('window:minimize'),
+      close:      () => ipcRenderer.send('window:close'),
+      getVersion:  () => ipcRenderer.invoke('app:version'),
+      getPrinters: () => ipcRenderer.invoke('app:printers'),
 
       // Sucursal (detectada por IP de la máquina)
       getSucursal: () => ipcRenderer.invoke('sucursal:get'),

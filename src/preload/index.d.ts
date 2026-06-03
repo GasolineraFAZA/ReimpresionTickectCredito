@@ -101,6 +101,8 @@ export interface ElectronBridge {
   // Ventana
   minimize:   () => void
   close:      () => void
+  getVersion:  () => Promise<string>
+  getPrinters: () => Promise<{ name: string; isDefault: boolean }[]>
   // Sucursal
   getSucursal: () => Promise<SucursalResponse>
   // Vista previa

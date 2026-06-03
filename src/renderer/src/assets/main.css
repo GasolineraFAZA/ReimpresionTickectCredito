@@ -1,17 +1,13 @@
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+html,
+body,
+#root {
+  height: 100%;
 }
 
 body {
-  background-color: #e5e7eb;
-}
-
-#root {
-  display: block;
   margin: 0;
-  padding: 0;
+  background-color: #ffffff;
+  overflow: hidden;
 }

@@ -5,7 +5,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { registerHandlers } from './ipc/handlers'
 import log from 'electron-log'
-import { updateElectronApp } from 'update-electron-app'
+import { autoUpdater } from 'electron-updater'
 
 log.initialize()
 log.info('[Main] Iniciando aplicación')
@@ -20,8 +20,8 @@ if (is.dev) {
 
 function createWindow(): BrowserWindow {
  const mainWindow = new BrowserWindow({
-    width: 560,
-    height: 310,
+    width: 600,
+    height: 480,
     show: false,
     resizable: false,
         frame: false,
@@ -66,11 +66,34 @@ app.whenReady().then(() => {
 
   // Auto-updater
   if (!is.dev) {
-    updateElectronApp({
-      repo:           'GasolineraFAZA/ReimpresionTickectCredito',
-      updateInterval: '1 hour',
-      logger:         log
+    autoUpdater.logger = log
+    autoUpdater.autoDownload = true
+    autoUpdater.autoInstallOnAppQuit = true
+
+    autoUpdater.on('update-available', (info) => {
+      log.info(`[Updater] Nueva versión disponible: ${info.version}`)
     })
+
+    autoUpdater.on('update-downloaded', () => {
+      log.info('[Updater] Actualización descargada — se instalará al cerrar')
+      const { dialog } = require('electron')
+      dialog.showMessageBox({
+        type:    'info',
+        title:   'Actualización disponible',
+        message: 'Hay una nueva versión disponible. ¿Deseas instalarla ahora?',
+        buttons: ['Instalar ahora', 'Después']
+      }).then(({ response }) => {
+        if (response === 0) autoUpdater.quitAndInstall()
+      })
+    })
+
+    autoUpdater.on('error', (err) => {
+      log.error('[Updater] Error:', err)
+    })
+
+    // Verificar al iniciar y cada hora
+    autoUpdater.checkForUpdates()
+    setInterval(() => autoUpdater.checkForUpdates(), 60 * 60 * 1000)
     log.info('[Main] Auto-updater iniciado')
   }
 
