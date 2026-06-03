@@ -67,8 +67,9 @@ app.whenReady().then(() => {
   // Auto-updater
   if (!is.dev) {
     updateElectronApp({
+      repo:           'GasolineraFAZA/ReimpresionTickectCredito',
       updateInterval: '1 hour',
-      logger: log
+      logger:         log
     })
     log.info('[Main] Auto-updater iniciado')
   }
