@@ -1,6 +1,7 @@
 import React from 'react'
 import type { DespachoPreview } from '../../../preload/index.d'
 import { numeroALetras } from '../utils/numeroALetras'
+import logoPunto from '../assets/logo-punto.png'
 
 // ─── Helpers de formato ───────────────────────────────────────────────────────
 
@@ -69,6 +70,11 @@ export function TicketPreview({ folio, pagoTarjeta, d }: Props) {
 
   return (
     <div style={style}>
+
+      {/* ── LOGO PUNTO+ ────────────────────────────────────────────── */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '6px' }}>
+        <img src={logoPunto} alt="Punto+" style={{ height: '26px', width: 'auto' }} />
+      </div>
 
       {/* ── ENCABEZADO GASOLINERA (dinámico desde BD) ──────────────── */}
       {d.claveEst && <Line center bold>{d.claveEst}</Line>}

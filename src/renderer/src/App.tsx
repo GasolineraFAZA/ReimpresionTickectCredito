@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import type { SucursalModel, DespachoPreview } from '../../preload/index.d'
 import { TicketPreview } from './components/TicketPreview'
+import logoPunto from './assets/logo-punto.png'
 
 // ─── Iconos (SVG inline) ───────────────────────────────────────────────────────
 
@@ -273,18 +274,13 @@ export default function App(): React.JSX.Element {
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div style={drag} className="relative shrink-0 bg-orange-100 px-7 pt-7 pb-5 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-orange-800 leading-tight">Módulo de Impresión</h1>
+          <h1 className="text-2xl font-extrabold text-orange-800 leading-tight">Reimpresión de tickets</h1>
           <p className="text-sm text-orange-400 mt-0.5">Gestión de tickets de crédito corporativos</p>
         </div>
 
-        {/* Mini mockup decorativo */}
-        <div className="w-24 h-16 bg-white rounded-lg shadow-md border border-orange-200 overflow-hidden mt-1">
-          <div className="h-3 bg-orange-500" />
-          <div className="p-1.5 space-y-1">
-            <div className="h-1 bg-gray-200 rounded w-3/4" />
-            <div className="h-1 bg-gray-200 rounded w-1/2" />
-            <div className="h-2 bg-orange-400 rounded w-2/3 mt-1.5" />
-          </div>
+        {/* Logo Punto+ */}
+        <div className="bg-white rounded-xl shadow-md border border-orange-200 px-4 py-3 mt-1 flex items-center">
+          <img src={logoPunto} alt="Punto+" className="h-7 w-auto object-contain" />
         </div>
 
         {/* Controles de ventana */}

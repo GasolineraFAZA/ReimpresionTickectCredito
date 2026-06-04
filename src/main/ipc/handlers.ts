@@ -162,8 +162,8 @@ export function registerHandlers(): void {
     try {
       const ip = getLocalIp()
       log.info(`[IPC] sucursal:get — IP local: ${ip}`)
-      //const sucursales = await getSucursalPorIp(ip)
-      const sucursales = await getSucursalPorIp('10.4.20.3')
+      const sucursales = await getSucursalPorIp(ip)
+      //const sucursales = await getSucursalPorIp('10.4.20.3')
       return { ip, sucursales }
     } catch (error) {
       log.error('[IPC] sucursal:get error:', error)
