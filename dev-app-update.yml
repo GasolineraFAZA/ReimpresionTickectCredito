@@ -1,0 +1,4 @@
+provider: github
+owner: GasolineraFAZA
+repo: ReimpresionTickectCredito
+updaterCacheDirName: reimpresion-tickets-updater
