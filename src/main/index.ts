@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import { app, shell, BrowserWindow } from 'electron'
 import { closeAllConnections } from './db/connection'
 import { join } from 'path'

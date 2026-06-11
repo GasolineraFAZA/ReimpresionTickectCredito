@@ -53,21 +53,23 @@ function horaIntToStr(hratrn: number): string {
 }
 
 /**
- * Calcula (subtotal, iva, total) con la fórmula exacta del C#:
+ * Calcula (subtotal, iva, total) usando el importe ya guardado en la BD (campo mto).
+ * Esto evita errores por el formato interno de Precio/Litros en distintas sucursales.
+ *
  *   IEPS     = Litros × iepsRate
- *   Total    = Precio × Litros
- *   BIVA     = (Total − IEPS) / 1.16
+ *   BIVA     = (Importe − IEPS) / 1.16
  *   SubTotal = BIVA + IEPS
  *   IVA      = BIVA × 0.16
+ *   Total    = Importe  (dato original de la transacción)
  */
-function calcTotales(precio: number, litros: number, iepsRate: number) {
-  const ieps     = litros * iepsRate
-  const total    = precio * litros
+function calcTotales(importe: number, litros: number, iepsRate: number) {
+  const r2       = (n: number) => Math.round(n * 100) / 100
+  const total    = r2(importe)
+  const ieps     = r2(litros * iepsRate)
   const biva     = (total - ieps) / 1.16
-  const subtotal = biva + ieps
-  const iva      = biva * 0.16
-  const r2 = (n: number) => Math.round(n * 100) / 100
-  return { subtotal: r2(subtotal), iva: r2(iva), total: r2(total) }
+  const subtotal = r2(biva + ieps)
+  const iva      = r2(biva * 0.16)
+  return { subtotal, iva, total }
 }
 
 // ─── Cache de configuración de BD ────────────────────────────────────────────
@@ -310,10 +312,11 @@ export function registerHandlers(): void {
       // ── 5. Obtener IEPS y calcular totales (fórmula del C#) ─────
       const iepsRate = await getIeps(config, d.Fecha, d.CodProd, d.CodigoGas)
       const totales  = calcTotales(
-        Number(d.Precio ?? 0),
-        Number(d.Litros ?? 0),
+        Number(d.Importe ?? 0),   // total real de la transacción (campo mto de Despachos)
+        Number(d.Litros  ?? 0),
         iepsRate
       )
+      log.info(`[Handlers] calcTotales → importe=${d.Importe} litros=${d.Litros} ieps=${iepsRate} → total=${totales.total} subtotal=${totales.subtotal} iva=${totales.iva}`)
 
       // ── 6. Validar restricción de tiempo (10 horas, igual que C#)
       const epoch = new Date(1899, 11, 30).getTime()

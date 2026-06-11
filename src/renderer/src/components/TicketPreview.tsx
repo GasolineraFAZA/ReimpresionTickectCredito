@@ -139,21 +139,12 @@ export function TicketPreview({ folio, pagoTarjeta, d, estacion, logoSrc }: Prop
       <Line>{sep}</Line>
 
       {/* ── PRODUCTO ─────────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '10px' }}>
-        <span>PRODUCTO</span>
-        <span>CANT</span>
-        <span>U.M.</span>
-        <span>PRECIO</span>
-        <span>IMPORTE</span>
-      </div>
       <Line>{sep}</Line>
       <Line>{d.producto}</Line>
-      {d.claveProd && <Line style={{ fontSize: '9px', color: '#555' }}>(CLAVE PEMEX {d.claveProd})</Line>}
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px' }}>
-        <span></span>
-        <span>{d.litros.toFixed(3)}</span>
-        <span>LTR</span>
-        <span>{d.precio}</span>
+      {d.claveProd && <Line style={{ fontSize: '9px' }}>(CLAVE PEMEX {d.claveProd})</Line>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', margin: '1px 0' }}>
+        <span>{d.litros.toFixed(3)} LTR</span>
+        <span>@ {fmt2(d.precio)}</span>
         <span>{fmt2(d.total)}</span>
       </div>
       <Line>{sep}</Line>
